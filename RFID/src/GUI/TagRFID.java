@@ -1,0 +1,551 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package GUI;
+
+import BUS.OrderdetailBUS;
+import BUS.Tag_BUS;
+import DTO.Product;
+import DTO.RFID;
+import DTO.Tag;
+import com.example.sdksamples.SampleProperties;
+import com.example.sdksamples.TagReportListener1;
+import com.example.sdksamples.TagReportListenerImplementation;
+import com.impinj.octane.AntennaConfigGroup;
+import com.impinj.octane.ImpinjReader;
+import com.impinj.octane.OctaneSdkException;
+import com.impinj.octane.ReaderMode;
+import com.impinj.octane.ReportConfig;
+import com.impinj.octane.ReportMode;
+import com.impinj.octane.Settings;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author MSI
+ */
+public class TagRFID extends javax.swing.JFrame {
+
+    public static Set<RFID> listScan;
+    public static DefaultTableModel model, model1;
+    List<Tag> tvList = new ArrayList<>();
+    Tag_BUS bus = new Tag_BUS();
+    OrderdetailBUS bus1 = new OrderdetailBUS();
+    Map<String, RFID> map=new HashMap<>();
+
+    /**
+     * Creates new form TagRFID
+     */
+    public TagRFID() {
+        initComponents();
+        model = (DefaultTableModel) tbl_tag_rfid.getModel();
+        model1 = (DefaultTableModel) tbl_tag.getModel();
+        showD();
+        //if(listScan==null){
+        //System.out.println("Du lieu rong");
+        //}else{
+        //showResult();
+        //}
+        getCb_Box_Product();
+    }
+
+    private void showD() {
+        tvList = bus.getListV();
+        model1.setRowCount(0);
+        tvList.forEach((tv) -> {
+            model1.addRow(new Object[]{tv.getTag_id(), tv.getProduct_id(), tv.getDate(), tv.getGate()});
+        });
+
+    }
+
+    private void getCb_Box_Product() {
+        List<Product> list = new ArrayList<>();
+        list = bus1.fill_cbb_product();
+        for (Product item : list) {
+            cbb_product_id.addItem(item.getProduct_id());
+        }
+
+    }
+
+//    private void showResult() {
+//        map = new HashMap<>();
+//
+////        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+////        LocalDateTime now = LocalDateTime.now();
+//        //listScan=TagReportListenerImplementation.list;
+////        listScan = new HashSet<>();
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A28F", dtf.format(now), "1"));
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A241", dtf.format(now), "1"));
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A28F", dtf.format(now), "1"));
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A230", dtf.format(now), "1"));
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A249", dtf.format(now), "1"));
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A250", dtf.format(now), "1"));
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A250", dtf.format(now), "1"));
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A255", dtf.format(now), "1"));
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A28F", dtf.format(now), "1"));
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A230", dtf.format(now), "1"));
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A249", dtf.format(now), "1"));
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A250", dtf.format(now), "1"));
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A250", dtf.format(now), "1"));
+////        listScan.add(new RFID("300F 4F57 3AD0 01C0 8369 A255", dtf.format(now), "1"));
+////        Scanner sc=new Scanner(System.in);
+////        for(int i=0;i<2;i++){
+////            System.out.println("Nhap tag id: ");
+////            String tagid=sc.nextLine();
+////            String date=dtf.format(now);
+////            System.out.println("Nhap gate: ");
+////            String gate=sc.nextLine();
+////            listScan.add(new RFID(tagid, date, gate));
+////        }
+//        Input.listScan1.forEach((ls) -> {
+//            map.put(ls.getTagID(), new RFID(ls.getDate(), ls.getGate()));
+//            //model.addRow(new Object[]{ls.getTagID(), ls.getDate(), ls.getGate()});
+//        });
+//
+//        for (Map.Entry<String, RFID> entry : map.entrySet()) {
+//            String k = entry.getKey();
+//            RFID v = entry.getValue();
+//            model.addRow(new Object[]{k, v.getDate(), v.getGate()});
+//        }
+//
+//    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        cbb_product_id = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tbl_tag_rfid = new javax.swing.JTable();
+        btn_add_all = new javax.swing.JButton();
+        btn_delete = new javax.swing.JButton();
+        btn_exit = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tbl_tag = new javax.swing.JTable();
+        btn_refresh = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        lb_time = new javax.swing.JLabel();
+        txt_gate = new javax.swing.JTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txt_tag_id = new javax.swing.JTextArea();
+        txt_save = new javax.swing.JButton();
+        btnConnect = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        cbb_product_id.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbb_product_idActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Product ID:");
+
+        tbl_tag_rfid.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Tag_ID", "date/time", "gate"
+            }
+        ));
+        tbl_tag_rfid.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_tag_rfidMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbl_tag_rfid);
+
+        btn_add_all.setText("Save ALL");
+        btn_add_all.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_add_allActionPerformed(evt);
+            }
+        });
+
+        btn_delete.setText("Delete");
+        btn_delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_deleteActionPerformed(evt);
+            }
+        });
+
+        btn_exit.setText("Exit");
+        btn_exit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_exitActionPerformed(evt);
+            }
+        });
+
+        tbl_tag.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "TagID", "Product_ID", "Date", "Gate"
+            }
+        ));
+        tbl_tag.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_tagMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tbl_tag);
+
+        btn_refresh.setText("Refesh");
+        btn_refresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_refreshActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("TAG ID");
+
+        jLabel3.setText("Date time");
+
+        jLabel4.setText("Gate");
+
+        lb_time.setText("Time");
+
+        txt_tag_id.setColumns(20);
+        txt_tag_id.setRows(5);
+        jScrollPane3.setViewportView(txt_tag_id);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(23, 23, 23)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(lb_time))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_gate, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lb_time)
+                            .addComponent(txt_gate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+        );
+
+        txt_save.setText("Save");
+        txt_save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_saveActionPerformed(evt);
+            }
+        });
+
+        btnConnect.setText("Connect");
+        btnConnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConnectActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btn_add_all)
+                            .addComponent(btn_refresh))
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txt_save)
+                                .addGap(115, 115, 115)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(cbb_product_id, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btn_delete)
+                                .addGap(33, 33, 33)
+                                .addComponent(btn_exit))))
+                    .addComponent(btnConnect))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnConnect)
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel2)
+                        .addGap(1, 1, 1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cbb_product_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_save, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_exit, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_add_all, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_add_allActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_allActionPerformed
+
+        for (Map.Entry<String, RFID> entry : map.entrySet()) {
+            String k = entry.getKey();
+            RFID v = entry.getValue();
+            Tag tag = new Tag();
+            tag.setTag_id(k);
+            tag.setProduct_id(cbb_product_id.getSelectedItem().toString());
+            tag.setDate(v.getDate());
+            tag.setGate(v.getGate());
+            System.out.println(tag.getTag_id() + ", " + tag.getProduct_id() + ", " + tag.getDate());
+            bus.them(tag);
+            model.setRowCount(0);
+        }
+        JOptionPane.showMessageDialog(rootPane, "Đã thêm");
+        tbl_tag.setModel(model1);
+        showD();// TODO add your handling code here:
+    }//GEN-LAST:event_btn_add_allActionPerformed
+
+    private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
+        int i = tbl_tag_rfid.getSelectedRow();
+
+        Tag tv = bus.dssv.get(i);
+        int option = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa?");
+        if (option == 0) {
+            bus.xoa(tv);
+            if (bus.dssv.remove(i) == null) {
+                model.removeRow(i);
+            }
+            tbl_tag_rfid.setModel(model);
+            showD();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_deleteActionPerformed
+
+    private void btn_exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exitActionPerformed
+        dispose();        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_exitActionPerformed
+
+    private void tbl_tag_rfidMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_tag_rfidMouseClicked
+        int Row = tbl_tag_rfid.getSelectedRow();
+        txt_tag_id.setText(tbl_tag_rfid.getModel().getValueAt(Row, 0).toString());
+        txt_gate.setText(tbl_tag_rfid.getModel().getValueAt(Row, 2).toString());
+        lb_time.setText(tbl_tag_rfid.getModel().getValueAt(Row, 1).toString());
+
+    }//GEN-LAST:event_tbl_tag_rfidMouseClicked
+
+    private void cbb_product_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbb_product_idActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbb_product_idActionPerformed
+
+    private void btn_refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_refreshActionPerformed
+        model.setRowCount(0);
+    }//GEN-LAST:event_btn_refreshActionPerformed
+
+    private void txt_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_saveActionPerformed
+        int i = tbl_tag_rfid.getSelectedRow();
+        Tag tag = new Tag();
+        tag.setTag_id(txt_tag_id.getText());
+        tag.setProduct_id(cbb_product_id.getSelectedItem().toString());
+        tag.setDate(lb_time.getText());
+        tag.setGate(txt_gate.getText());
+        //System.out.println(tag.getTag_id() + ", " + tag.getProduct_id() + ", " + tag.getDate());
+        bus.them(tag);
+        model.removeRow(i);
+        JOptionPane.showMessageDialog(rootPane, "Đã thêm");
+        tbl_tag.setModel(model1);
+        showD();
+    }//GEN-LAST:event_txt_saveActionPerformed
+
+    private void tbl_tagMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_tagMouseClicked
+        int Row = tbl_tag.getSelectedRow();
+        txt_tag_id.setText(tbl_tag.getModel().getValueAt(Row, 0).toString());
+        txt_gate.setText(tbl_tag.getModel().getValueAt(Row, 3).toString());
+        lb_time.setText(tbl_tag.getModel().getValueAt(Row, 2).toString());
+        cbb_product_id.setSelectedItem(tbl_tag.getModel().getValueAt(Row, 1));
+
+    }//GEN-LAST:event_tbl_tagMouseClicked
+
+    private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
+          Input1 input=new Input1(model,map);
+          input.scan();
+
+//        try {
+//                                  
+//            //String hostname = System.getProperty(SampleProperties.hostname);
+//            String hostname="169.254.153.74";
+//
+//            if (hostname == null) {
+//                throw new Exception("Must specify the '"
+//                        + SampleProperties.hostname + "' property");
+//            }
+//
+//            ImpinjReader reader = new ImpinjReader();
+//
+//            System.out.println("Connecting");
+//            reader.connect(hostname);
+//
+//            Settings settings = reader.queryDefaultSettings();
+//
+//            ReportConfig report = settings.getReport();
+//            report.setIncludeAntennaPortNumber(true);
+//            report.setMode(ReportMode.Individual);
+//
+//            // The reader can be set into various modes in which reader
+//            // dynamics are optimized for specific regions and environments.
+//            // The following mode, AutoSetDenseReader, monitors RF noise and interference and then automatically
+//            // and continuously optimizes the reader's configuration
+//            settings.setReaderMode(ReaderMode.AutoSetDenseReader);
+//
+//            // set some special settings for antenna 1
+//            AntennaConfigGroup antennas = settings.getAntennas();
+//            antennas.disableAll();
+//            antennas.enableById(new short[]{1});
+//            antennas.getAntenna((short) 1).setIsMaxRxSensitivity(false);
+//            antennas.getAntenna((short) 1).setIsMaxTxPower(false);
+//            antennas.getAntenna((short) 1).setTxPowerinDbm(20.0);
+//            antennas.getAntenna((short) 1).setRxSensitivityinDbm(-70);
+//            
+//            reader.setTagReportListener(new TagReportListener1(model, map));
+//
+//            System.out.println("Applying Settings");
+//            reader.applySettings(settings);
+//
+//            System.out.println("Starting");
+//            reader.start();
+//
+//            System.out.println("Press Enter to exit.");
+//            Scanner s = new Scanner(System.in);
+//            s.nextLine();
+//            reader.stop();
+//            reader.disconnect();                      
+//            
+//        } catch (OctaneSdkException ex) {
+//            System.out.println(ex.getMessage());
+//        } catch (Exception ex) {
+//            System.out.println(ex.getMessage());
+//            ex.printStackTrace(System.out);
+//        }
+             
+    }//GEN-LAST:event_btnConnectActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(TagRFID.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(TagRFID.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(TagRFID.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(TagRFID.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new TagRFID().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnConnect;
+    private javax.swing.JButton btn_add_all;
+    private javax.swing.JButton btn_delete;
+    private javax.swing.JButton btn_exit;
+    private javax.swing.JButton btn_refresh;
+    private javax.swing.JComboBox<String> cbb_product_id;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lb_time;
+    private javax.swing.JTable tbl_tag;
+    public static javax.swing.JTable tbl_tag_rfid;
+    private javax.swing.JTextField txt_gate;
+    private javax.swing.JButton txt_save;
+    private javax.swing.JTextArea txt_tag_id;
+    // End of variables declaration//GEN-END:variables
+}
